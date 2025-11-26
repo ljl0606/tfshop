@@ -24,6 +24,9 @@ Route::prefix('v' . config('tfshop.versions'))->namespace('v' . config('tfshop.v
     });
     Route::prefix('admin')->namespace('Admin')->middleware(['auth:api'])->group(function () {
         Route::post('uploadPictures', 'IndexController@uploadPictures')->name('admin.uploadPictures');  //上传
+        /**
+         * @see \App\Http\Controllers\v1\Admin\LoginController::userInfo()
+         */
         Route::get('userInfo', 'LoginController@userInfo')->name('admin.userInfo');  //用户详情
         Route::get('index', 'IndexController@index')->name('admin.index');  //首页
         Route::get('admin', 'AdminController@list')->name('admin.adminList')->middleware(['permissions:AdminList']);  //管理员列表
@@ -96,6 +99,9 @@ Route::prefix('v' . config('tfshop.versions'))->namespace('v' . config('tfshop.v
         Route::post('banner', 'BannerController@create')->name('admin.bannerCreate')->middleware(['permissions:BannerCreate']);    //创建轮播
         Route::post('banner/{id}', 'BannerController@edit')->name('admin.bannerEdit')->middleware(['permissions:BannerEdit']);    //保存轮播
         Route::post('banner/destroy/{id}', 'BannerController@destroy')->name('admin.bannerDestroy')->middleware(['permissions:BannerDestroy']);    //删除轮播
+        /**
+         * @see  \App\Http\Controllers\v1\Admin\PluginController::list()
+         */
         Route::get('plugin', 'PluginController@list')->name('admin.plugInList')->middleware(['permissions:PlugInList']);    //插件列表
         Route::post('plugin', 'PluginController@create')->name('admin.plugInCreate')->middleware(['permissions:PlugInCreate']);    //创建插件
         Route::post('plugin/{name}', 'PluginController@edit')->name('admin.plugInEdit')->middleware(['permissions:PlugInEdit']);    //保存插件

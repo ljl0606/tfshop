@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Fruitcake\Cors\HandleCors; // 引入 CORS 处理器
 
 class Handler extends ExceptionHandler
 {
@@ -60,6 +61,11 @@ class Handler extends ExceptionHandler
 
                 }
             }
+        }
+        // 如果是跨域请求，则添加 CORS 头
+        if ($request->isMethod('OPTIONS') || $request->header('Origin')) {
+            $cors = app(HandleCors::class);
+            $cors->addCorsHeaders($request, $response);
         }
         $response['result'] = 'error';
         return response()->json($response, $error->getStatusCode());

@@ -19,6 +19,7 @@
         "alibabacloud/client": "^1.5",
         "doctrine/dbal": "^2.11",
         "fideloper/proxy": "^4.0",
+        "fruitcake/laravel-cors": "^3.0",
         "guzzlehttp/guzzle": "^6.2",
         "iidestiny/laravel-filesystem-oss": "^1.2",
         "intervention/image": "^2.5",

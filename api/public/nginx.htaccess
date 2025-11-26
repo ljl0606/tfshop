@@ -1,3 +1,32 @@
 location / {
- try_files $uri $uri/ /index.php?$query_string;
+        try_files $uri $uri/ /index.php$is_args$query_string;
+ }
+  #REWRITE-END
+
+location ~ \.php$ {
+        fastcgi_pass   127.0.0.1:9003;
+        fastcgi_index  index.php;
+        include        fastcgi_params;
+        fastcgi_param  SCRIPT_FILENAME                            
+        $document_root$fastcgi_script_name;
 }
+
+
+location ~ ^/(\.user.ini|\.htaccess|\.git|\.svn|\.project|LICENSE|README.md)
+{
+       return 404;
+}
+
+location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+{
+        expires 30d;
+        error_log off;
+        access_log off;
+}
+
+ location ~ .*\.(js|css)?$
+    {
+        expires 12h;
+        error_log off;
+        access_log off;
+    }

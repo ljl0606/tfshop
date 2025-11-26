@@ -92,5 +92,6 @@
                 }
             }
         }
-    }
+    },
+	"sassImplementationName": "node-sass"
 }
