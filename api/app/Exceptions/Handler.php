@@ -2,17 +2,19 @@
 
 namespace App\Exceptions;
 
-use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Throwable;
-use Fruitcake\Cors\HandleCors; // 引入 CORS 处理器
+use Fruitcake\Cors\CorsService;
 
 class Handler extends ExceptionHandler
 {
     /**
      * A list of the exception types that are not reported.
      *
-     * @var array
+     * @var array<int, class-string<Throwable>>
      */
     protected $dontReport = [
         //
@@ -21,53 +23,51 @@ class Handler extends ExceptionHandler
     /**
      * A list of the inputs that are never flashed for validation exceptions.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $dontFlash = [
+        'current_password',
         'password',
         'password_confirmation',
     ];
 
     /**
-     * Report or log an exception.
+     * Register the exception handling callbacks for the application.
      *
-     * @param \Throwable $exception
      * @return void
-     * @throws Exception
      */
-    public function report(Throwable $exception)
+    public function register()
     {
-        parent::report($exception);
+        $this->reportable(function (Throwable $e) {
+            //
+        });
     }
 
     /**
      * Render an exception into an HTTP response.
      *
      * @param \Illuminate\Http\Request $request
-     * @param Throwable $exception
-     * @return \Illuminate\Http\Response
+     * @param Throwable $e
+     * @return JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
+     *
      * @throws Throwable
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
-        $error = $this->convertExceptionToResponse($exception);
-        $response['status_code'] = $error->getStatusCode();
-        $response['code'] = $exception->getCode();
-        $response['message'] = empty($exception->getMessage()) ? 'something error' : $exception->getMessage();
-        if(config('app.debug')) {
-            if($error->getStatusCode() >= 500) {
-                if(config('app.debug')) {
-                    $response['trace'] = $exception->getTraceAsString();
+        error_log($e->getMessage());
+        error_log($e->getTraceAsString());
 
-                }
-            }
-        }
-        // 如果是跨域请求，则添加 CORS 头
-        if ($request->isMethod('OPTIONS') || $request->header('Origin')) {
-            $cors = app(HandleCors::class);
-            $cors->addCorsHeaders($request, $response);
-        }
-        $response['result'] = 'error';
-        return response()->json($response, $error->getStatusCode());
+        $response = parent::render($request, $e);
+
+        // Add CORS headers to all responses
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Headers', 'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization,applyid,openid,apply-secret,versionid, X-XSRF-TOKEN,Lang');
+        $response->headers->set('Access-Control-Expose-Headers', 'Authorization, authenticated');
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS,DELETE');
+        $response->headers->set('Access-Control-Allow-Credentials', 'true');
+
+        return $response;
     }
+
+    // Test comment to verify file update
 }
