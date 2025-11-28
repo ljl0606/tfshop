@@ -1,6 +1,6 @@
 {
     "name" : "TFSHOP电商商城",
-    "appid" : "__UNI__3D2DD00",
+    "appid" : "__UNI__61F7170",
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -93,5 +93,5 @@
             }
         }
     },
-	"sassImplementationName": "node-sass"
+    "sassImplementationName" : "node-sass"
 }
