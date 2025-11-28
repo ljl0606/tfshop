@@ -21,7 +21,15 @@ return [
      * You can enable CORS for 1 or multiple paths.
      * Example: ['api/*']
      */
-    'paths' => ['api/*'],
+   'paths' => ['*'],
+    /*
+     * Handle CORS for preflight requests
+     */
+    'preflight' => true,
+    /*
+     * Force CORS for all requests
+     */
+    'force' => true,
 
     /*
     * Matches the request method. `['*']` allows all methods.
