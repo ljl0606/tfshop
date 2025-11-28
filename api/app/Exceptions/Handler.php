@@ -51,23 +51,58 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         $error = $this->convertExceptionToResponse($exception);
-        $response['status_code'] = $error->getStatusCode();
-        $response['code'] = $exception->getCode();
-        $response['message'] = empty($exception->getMessage()) ? 'something error' : $exception->getMessage();
-        if(config('app.debug')) {
-            if($error->getStatusCode() >= 500) {
-                if(config('app.debug')) {
-                    $response['trace'] = $exception->getTraceAsString();
-
-                }
+        $statusCode = $error->getStatusCode();
+        
+        // 构建错误响应
+        $response = [
+            'status_code' => $statusCode,
+            'code' => $exception->getCode(),
+            'message' => empty($exception->getMessage()) ? 'something error' : $exception->getMessage(),
+            'result' => 'error'
+        ];
+        
+        // 调试模式下添加详细信息
+        if (config('app.debug')) {
+            if ($statusCode >= 500) {
+                $response['trace'] = $exception->getTraceAsString();
+                $response['file'] = $exception->getFile();
+                $response['line'] = $exception->getLine();
             }
         }
-        // 如果是跨域请求，则添加 CORS 头
-        if ($request->isMethod('OPTIONS') || $request->header('Origin')) {
-            $cors = app(HandleCors::class);
-            $cors->addCorsHeaders($request, $response);
+        
+        // 创建JSON响应
+        $jsonResponse = response()->json($response, $statusCode);
+        
+        // 为错误响应添加CORS头，确保跨域请求在错误情况下也能正常处理
+        if ($request->header('Origin')) {
+            $this->addCorsHeadersToResponse($request, $jsonResponse);
         }
-        $response['result'] = 'error';
-        return response()->json($response, $error->getStatusCode());
+        
+        return $jsonResponse;
+    }
+    
+    /**
+     * 为响应添加CORS头
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\JsonResponse $response
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function addCorsHeadersToResponse($request, $response)
+    {
+        $origin = $request->header('Origin', '');
+        
+        // 设置CORS头
+        $response->headers->set('Access-Control-Allow-Origin', $origin);
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+        $response->headers->set('Access-Control-Allow-Headers', 
+            'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, ' .
+            'applyid, openid, apply-secret, versionid, X-XSRF-TOKEN, Lang, X-Requested-With'
+        );
+        $response->headers->set('Access-Control-Expose-Headers', 'Authorization, authenticated');
+        $response->headers->set('Access-Control-Allow-Credentials', 'true');
+        $response->headers->set('Access-Control-Max-Age', '86400'); // 24小时
+        
+        return $response;
     }
 }
