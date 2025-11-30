@@ -148,5 +148,17 @@ Route::prefix('v' . config('tfshop.versions'))->namespace('v' . config('tfshop.v
         Route::post('language', 'LanguageController@create')->name('admin.languageCreate')->middleware(['permissions:LanguageCreate']);    //语言地区
         Route::post('language/{id}', 'LanguageController@edit')->name('admin.languageEdit')->middleware(['permissions:LanguageEdit']);    //保存语言
         Route::post('language/destroy/{id}', 'LanguageController@destroy')->name('admin.languageDestroy')->middleware(['permissions:LanguageDestroy']);    //删除语言
+        
+        // 阶梯满减规则相关路由
+        Route::get('ladderDiscount', 'LadderDiscountController@list')->name('admin.ladderDiscountList')->middleware(['permissions:LadderDiscountList']);    //阶梯满减规则列表
+        Route::get('ladderDiscount/{id}', 'LadderDiscountController@detail')->name('admin.ladderDiscountDetail')->middleware(['permissions:LadderDiscountEdit']);    //阶梯满减规则详情
+        Route::post('ladderDiscount', 'LadderDiscountController@create')->name('admin.ladderDiscountCreate')->middleware(['permissions:LadderDiscountCreate']);    //创建阶梯满减规则
+        Route::post('ladderDiscount/{id}', 'LadderDiscountController@edit')->name('admin.ladderDiscountEdit')->middleware(['permissions:LadderDiscountEdit']);    //保存阶梯满减规则
+        Route::post('ladderDiscount/destroy/{id}', 'LadderDiscountController@destroy')->name('admin.ladderDiscountDestroy')->middleware(['permissions:LadderDiscountDestroy']);    //删除阶梯满减规则
+        
+        // 阶梯满减规则选择器相关路由
+        Route::get('ladderDiscount/products', 'LadderDiscountController@getAvailableProducts')->name('admin.ladderDiscountAvailableProducts')->middleware(['permissions:LadderDiscountCreate', 'permissions:LadderDiscountEdit']);    //获取可用商品列表
+        Route::get('ladderDiscount/brands', 'LadderDiscountController@getAvailableBrands')->name('admin.ladderDiscountAvailableBrands')->middleware(['permissions:LadderDiscountCreate', 'permissions:LadderDiscountEdit']);    //获取可用品牌列表
+        Route::get('ladderDiscount/categories', 'LadderDiscountController@getAvailableCategories')->name('admin.ladderDiscountAvailableCategories')->middleware(['permissions:LadderDiscountCreate', 'permissions:LadderDiscountEdit']);    //获取可用分类列表
     });
 });
