@@ -74,7 +74,9 @@
         "requiredPrivateInfos" : [ "chooseLocation", "chooseAddress" ]
     },
     "h5" : {
-        "devServer" : {},
+        "devServer" : {
+            "port" : 8300
+        },
         "title" : "TFSHOP电商商城",
         "domain" : "",
         "router" : {
