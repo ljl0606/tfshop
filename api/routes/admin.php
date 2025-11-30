@@ -148,5 +148,12 @@ Route::prefix('v' . config('tfshop.versions'))->namespace('v' . config('tfshop.v
         Route::post('language', 'LanguageController@create')->name('admin.languageCreate')->middleware(['permissions:LanguageCreate']);    //语言地区
         Route::post('language/{id}', 'LanguageController@edit')->name('admin.languageEdit')->middleware(['permissions:LanguageEdit']);    //保存语言
         Route::post('language/destroy/{id}', 'LanguageController@destroy')->name('admin.languageDestroy')->middleware(['permissions:LanguageDestroy']);    //删除语言
+
+        // 阶梯满减规则
+        Route::get('fullReduction', 'FullReductionController@list')->name('admin.fullReductionList');    //阶梯满减规则列表
+        Route::get('fullReduction/{id}', 'FullReductionController@detail')->name('admin.fullReductionDetail');    //阶梯满减规则详情
+        Route::post('fullReduction', 'FullReductionController@create')->name('admin.fullReductionCreate');    //创建阶梯满减规则
+        Route::post('fullReduction/{id}', 'FullReductionController@edit')->name('admin.fullReductionEdit');    //编辑阶梯满减规则
+        Route::post('fullReduction/destroy/{id}', 'FullReductionController@destroy')->name('admin.fullReductionDestroy');    //删除阶梯满减规则
     });
 });
