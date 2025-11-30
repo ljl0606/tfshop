@@ -62,10 +62,6 @@ class Handler extends ExceptionHandler
         $responseData['result'] = 'error';
         $response = response()->json($responseData, $error->getStatusCode());
         
-        // 如果是跨域请求，则添加 CORS 头
-        $cors = app(HandleCors::class);
-        $cors->addCorsHeaders($request, $response);
-        
         return $response;
     }
 }

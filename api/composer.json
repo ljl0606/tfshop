@@ -43,6 +43,7 @@
         "knuckleswtf/scribe": "^3.37",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^4.1",
+        "phpunit/phpunit": "^9.6",
         "slevomat/coding-standard": "^6.4",
         "squizlabs/php_codesniffer": "^3.5"
     },
