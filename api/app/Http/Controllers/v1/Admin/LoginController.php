@@ -104,6 +104,7 @@ class LoginController extends Controller
     {
         $client = new Client();
         $url = request()->root() . '/oauth/token';
+ 
         $params = array_merge(config('passport.admin.refresh'), [
             'refresh_token' => $request->refresh_token,
         ]);

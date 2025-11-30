@@ -15,7 +15,13 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v' . config('tfshop.versions'))->namespace('v' . config('tfshop.versions'))->group(function () {
     // 后台API
     Route::prefix('admin')->namespace('Admin')->group(function () {
+        /**
+         * @see \App\Http\Controllers\v1\Admin\LoginController::index()
+         */
         Route::post('login', 'LoginController@index')->name('admin.login');  //登录
+        /**
+         * @see \App\Http\Controllers\v1\Admin\LoginController::refresh()
+         */
         Route::post('refreshToken', 'LoginController@refresh')->name('admin.refreshToken');  //刷新token
         Route::get('plugin/download/{name}', 'PluginController@download')->name('admin.plugInDownload');    //插件下载
         Route::post('verifyPlugin/{id}', 'PluginController@verify')->name('admin.verifyPlugin');   //验证插件是否安装
