@@ -51,23 +51,23 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         $error = $this->convertExceptionToResponse($exception);
-        $response['status_code'] = $error->getStatusCode();
-        $response['code'] = $exception->getCode();
-        $response['message'] = empty($exception->getMessage()) ? 'something error' : $exception->getMessage();
+        $responseData['status_code'] = $error->getStatusCode();
+        $responseData['code'] = $exception->getCode();
+        $responseData['message'] = empty($exception->getMessage()) ? 'something error' : $exception->getMessage();
         if(config('app.debug')) {
             if($error->getStatusCode() >= 500) {
-                if(config('app.debug')) {
-                    $response['trace'] = $exception->getTraceAsString();
-
-                }
+                $responseData['trace'] = $exception->getTraceAsString();
             }
         }
+        $responseData['result'] = 'error';
+        $response = response()->json($responseData, $error->getStatusCode());
+        
         // 如果是跨域请求，则添加 CORS 头
         if ($request->isMethod('OPTIONS') || $request->header('Origin')) {
             $cors = app(HandleCors::class);
             $cors->addCorsHeaders($request, $response);
         }
-        $response['result'] = 'error';
-        return response()->json($response, $error->getStatusCode());
+        
+        return $response;
     }
 }

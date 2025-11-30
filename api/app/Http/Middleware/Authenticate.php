@@ -13,6 +13,7 @@ namespace App\Http\Middleware;
 
 use App\Code;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Fruitcake\Cors\HandleCors;
 
 class Authenticate extends Middleware
 {
@@ -28,6 +29,24 @@ class Authenticate extends Middleware
         if (!$request->expectsJson()) {
 //            exit('密钥已失效，请清空本地缓存');
             throw new \Exception(__('middleware.authenticate.error'), 500);
+        } else {
+            // 创建401响应
+            $response = response()->json([
+                'status_code' => 401,
+                'code' => 401,
+                'message' => __('middleware.authenticate.error'),
+                'result' => 'error'
+            ], 401);
+            
+            // 添加CORS头
+            if ($request->isMethod('OPTIONS') || $request->header('Origin')) {
+                $cors = app(HandleCors::class);
+                $cors->addCorsHeaders($request, $response);
+            }
+            
+            // 直接返回响应，不继续执行后续中间件
+            $response->send();
+            exit;
         }
     }
 }
