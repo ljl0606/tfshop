@@ -78,6 +78,11 @@ Route::prefix('v' . config('tfshop.versions'))->namespace('v' . config('tfshop.v
         Route::post('category', 'CategoryController@create')->name('admin.categoryCreate')->middleware(['permissions:CategoryCreate']);    //创建分类
         Route::post('category/{id}', 'CategoryController@edit')->name('admin.categoryEdit')->middleware(['permissions:CategoryEdit']);    //保存分类
         Route::post('category/destroy/{id}', 'CategoryController@destroy')->name('admin.categoryDestroy')->middleware(['permissions:CategoryDestroy']);    //删除分类
+        Route::get('fullReduction', 'FullReductionController@list')->name('admin.fullReductionList')->middleware(['permissions:FullReductionList']);    //阶梯满减列表
+        Route::post('fullReduction', 'FullReductionController@create')->name('admin.fullReductionCreate')->middleware(['permissions:FullReductionCreate']);    //创建阶梯满减
+        Route::post('fullReduction/{id}', 'FullReductionController@update')->name('admin.fullReductionUpdate')->middleware(['permissions:FullReductionEdit']);    //更新阶梯满减
+        Route::get('fullReduction/{id}', 'FullReductionController@show')->name('admin.fullReductionShow')->middleware(['permissions:FullReductionDetail']);    //阶梯满减详情
+        Route::post('fullReduction/destroy/{id}', 'FullReductionController@delete')->name('admin.fullReductionDestroy')->middleware(['permissions:FullReductionDestroy']);    //删除阶梯满减
         Route::get('freight', 'FreightController@list')->name('admin.freightList')->middleware(['permissions:FreightList']);    //运费模板列表
         Route::get('freight/{id}', 'FreightController@detail')->name('admin.freightDetail')->middleware(['permissions:FreightEdit']);    //运费模板详情
         Route::post('freight', 'FreightController@create')->name('admin.freightCreate')->middleware(['permissions:FreightCreate']);    //创建运费模板
